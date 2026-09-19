@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Friendship & Rupee Extortion Unit</title>
+    <style>
+        :root {
+            --card-bg: rgba(22, 27, 34, 0.85); /* Dark grey / black translucent card */
+            --text-color: #f8fafc;
+            --border-color: #334155;
+            --accent-success: #34d399;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            /* Fullscreen moving pastel rainbow current background */
+            background: linear-gradient(135deg, #ffd1dc, #ffdfba, #ffffba, #baffc9, #bae1ff, #e8c5ff);
+            background-size: 400% 400%;
+            animation: pastelCurrent 15s ease infinite;
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        @keyframes pastelCurrent {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 20px;
+            box-shadow: 0 25px 35px -5px rgba(0, 0, 0, 0.4), 0 10px 15px -5px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .illustration-wrapper {
+            margin: 15px auto 10px auto;
+            display: flex;
+            justify-content: center;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            /* Rainbow Gradient text effect */
+            background: linear-gradient(135deg, #f472b6, #a78bfa, #60a5fa, #34d399);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 0.9rem;
+            color: #94a3b8;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+            color: #e2e8f0;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 16px;
+            background: #0f172a;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            color: #f8fafc;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #a78bfa;
+            box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.2);
+            background: #0f172a;
+        }
+
+        .tip-options {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .toggle-btn {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid var(--border-color);
+            background: #0f172a;
+            color: #94a3b8;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .toggle-btn.active[data-value="yes"] {
+            background: rgba(52, 211, 153, 0.15);
+            border-color: var(--accent-success);
+            color: var(--accent-success);
+        }
+
+        .toggle-btn.active[data-value="no"] {
+            background: rgba(248, 113, 113, 0.15);
+            border-color: #f87171;
+            color: #f87171;
+        }
+
+        .sarcastic-box {
+            background: #2d1b2d;
+            border: 1px dashed #f472b6;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            color: #f472b6;
+            font-style: italic;
+            margin-top: 8px;
+            display: none;
+        }
+
+        .tip-input-wrapper {
+            display: none;
+            margin-top: 8px;
+        }
+
+        .split-btn {
+            width: 100%;
+            padding: 14px;
+            /* Multi-color rainbow gradient button */
+            background: linear-gradient(135deg, #ec4899, #8b5cf6, #3b82f6);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.2s ease, transform 0.1s ease;
+            margin-top: 10px;
+        }
+
+        .split-btn:hover {
+            opacity: 0.9;
+        }
+
+        .split-btn:active {
+            transform: scale(0.98);
+        }
+
+        .result-container {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            display: none;
+        }
+
+        .result-container h3 {
+            font-size: 1rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+
+        .highlight-result {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--accent-success);
+            background: rgba(52, 211, 153, 0.1);
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(52, 211, 153, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>Friendship vs. Finance</h1>
+            
+            <!-- Rainbow-themed inline vector wallet & receipt illustration -->
+            <div class="illustration-wrapper">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <defs>
+                        <linearGradient id="rainbow-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#ec4899" />
+                            <stop offset="33%" stop-color="#8b5cf6" />
+                            <stop offset="66%" stop-color="#3b82f6" />
+                            <stop offset="100%" stop-color="#10b981" />
+                        </linearGradient>
+                    </defs>
+                    <!-- Wallet Body -->
+                    <path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4" stroke="url(#rainbow-gradient)"></path>
+                    <path d="M4 6v12a2 2 0 0 0 2 2h14v-4" stroke="url(#rainbow-gradient)"></path>
+                    <path d="M18 12a2 2 0 0 0-2 2c0 1.1.9 2 2 2h4v-4h-4z" stroke="url(#rainbow-gradient)"></path>
+                    <!-- Floating Rupee / Sparkles Accent -->
+                    <circle cx="12" cy="11" r="1.5" fill="#a78bfa"></circle>
+                </svg>
+            </div>
+
+            <p>Because keeping receipts ruins friendships, but math doesn't.</p>
+        </div>
+
+        <div class="form-group">
+            <label for="friendsCount">No. of Friends</label>
+            <input type="text" id="friendsCount" placeholder="e.g. 4">
+        </div>
+
+        <div class="form-group">
+            <label>Do you want to leave a tip?</label>
+            <div class="tip-options">
+                <button type="button" class="toggle-btn" data-value="yes" id="tipYesBtn">Yes</button>
+                <button type="button" class="toggle-btn" data-value="no" id="tipNoBtn">No</button>
+            </div>
+            
+            <div class="tip-input-wrapper" id="tipInputWrapper">
+                <input type="text" id="tipAmount" placeholder="Enter tip amount in rupees">
+            </div>
+
+            <div class="sarcastic-box" id="sarcasticText">
+                <!-- Random sarcastic message will be injected here -->
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="billAmount">Bill Amount (₹)</label>
+            <input type="text" id="billAmount" placeholder="e.g. 2,400">
+        </div>
+
+        <button type="button" class="split-btn" id="splitBtn">Split the Bill</button>
+
+        <div class="result-container" id="resultContainer">
+            <h3>Each person should pay:</h3>
+            <div class="highlight-result" id="finalResultText">₹0.00</div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tipYesBtn = document.getElementById('tipYesBtn');
+            const tipNoBtn = document.getElementById('tipNoBtn');
+            const tipInputWrapper = document.getElementById('tipInputWrapper');
+            const sarcasticText = document.getElementById('sarcasticText');
+            const splitBtn = document.getElementById('splitBtn');
+            const resultContainer = document.getElementById('resultContainer');
+            const finalResultText = document.getElementById('finalResultText');
+
+            let tipChoice = null; // 'yes' or 'no'
+
+            // Array of 6 distinct sarcastic messages
+            const sarcasticQuotes = [
+                "\"Ah, saving money over service staff generosity? Classic. Your future billionaire self thanks you.\"",
+                "\"Zero tip? Bold move. Hope you left a stellar review on how great you are at holding onto cash.\"",
+                "\"Who needs to tip waiters when you can look like an absolute financial wizard to your squad?\"",
+                "\"Spoken like true economists. The waiter's emotional damage is free anyway.\"",
+                "\"Not a single rupee extra? You guys negotiate hard. Wall Street is calling.\"",
+                "\"Skipping the tip? Well, at least your friendship survives another day of penny-pinching magnificence.\""
+            ];
+
+            // Function to format raw string inputs with commas (e.g., 100000 -> 100,000)
+            function formatNumberWithCommas(value) {
+                let cleanVal = value.replace(/[^0-9.]/g, '');
+                
+                const parts = cleanVal.split('.');
+                if (parts.length > 2) {
+                    cleanVal = parts[0] + '.' + parts.slice(1).join('');
+                }
+
+                if (cleanVal === '') return '';
+
+                let intPart = parts[0];
+                let decPart = parts.length > 1 ? '.' + parts[1] : '';
+
+                if (intPart.length > 0) {
+                    intPart = Number(intPart).toLocaleString('en-IN');
+                }
+
+                return intPart + decPart;
+            }
+
+            // Real-time comma formatting handler for inputs
+            function setupInputFormatting(inputId) {
+                const input = document.getElementById(inputId);
+                input.addEventListener('input', (e) => {
+                    const cursorPosition = input.selectionStart;
+                    const oldLength = input.value.length;
+                    
+                    input.value = formatNumberWithCommas(input.value);
+                    
+                    const newLength = input.value.length;
+                    input.setSelectionRange(cursorPosition + (newLength - oldLength), cursorPosition + (newLength - oldLength));
+                });
+            }
+
+            setupInputFormatting('friendsCount');
+            setupInputFormatting('billAmount');
+            setupInputFormatting('tipAmount');
+
+            // Toggle Tip Choice logic
+            tipYesBtn.addEventListener('click', () => {
+                tipChoice = 'yes';
+                tipYesBtn.classList.add('active');
+                tipNoBtn.classList.remove('active');
+                tipInputWrapper.style.display = 'block';
+                sarcasticText.style.display = 'none';
+            });
+
+            tipNoBtn.addEventListener('click', () => {
+                tipChoice = 'no';
+                tipNoBtn.classList.add('active');
+                tipYesBtn.classList.remove('active');
+                tipInputWrapper.style.display = 'none';
+                
+                // Pick a random sarcastic message from the 6 options
+                const randomIndex = Math.floor(Math.random() * sarcasticQuotes.length);
+                sarcasticText.textContent = sarcasticQuotes[randomIndex];
+                sarcasticText.style.display = 'block';
+
+                document.getElementById('tipAmount').value = '';
+            });
+
+            // Bill Splitting Logic
+            splitBtn.addEventListener('click', () => {
+                const friendsRaw = document.getElementById('friendsCount').value.replace(/,/g, '');
+                const billRaw = document.getElementById('billAmount').value.replace(/,/g, '');
+                const tipRaw = document.getElementById('tipAmount').value.replace(/,/g, '');
+
+                const friends = parseInt(friendsRaw);
+                const bill = parseFloat(billRaw);
+                const tip = tipChoice === 'yes' && tipRaw !== '' ? parseFloat(tipRaw) : 0;
+
+                // Validation
+                if (isNaN(friends) || friends <= 0) {
+                    alert('Please enter a valid number of friends (at least 1).');
+                    return;
+                }
+
+                if (isNaN(bill) || bill < 0) {
+                    alert('Please enter a valid bill amount.');
+                    return;
+                }
+
+                if (tipChoice === null) {
+                    alert('Please choose whether you want to leave a tip or not.');
+                    return;
+                }
+
+                if (tipChoice === 'yes' && (isNaN(tip) || tip < 0)) {
+                    alert('Please enter a valid tip amount.');
+                    return;
+                }
+
+                // Calculation logic
+                const totalAmount = bill + tip;
+                const amountPerPerson = totalAmount / friends;
+
+                // Display bold highlighted result with comma separators
+                finalResultText.textContent = `₹${amountPerPerson.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                resultContainer.style.display = 'block';
+            });
+        });
+    </script>
+</body>
+</html>
